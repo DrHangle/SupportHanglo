@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Input and Preview</title>
+    <style>
+        @media print {
+            body {
+                font-size: 9pt;
+                width: 100%;
+            }
+
+            #container {
+                width: 100%;
+            }
+
+            #p {
+                position: relative;
+                border: 1px solid black;
+                width: 100%;
+                margin: 0 auto;
+                padding: 10px;
+                overflow: visible;
+                line-height: 1.5 !important;
+                height: auto !important;
+                page-break-after: always;
+            }
+
+            textarea {
+                display: none;
+            }
+        }
+
+        #container {
+            width: 90vw;
+            margin: 0 auto;
+        }
+    </style>
+</head>
+
+<body>
+    <div id="container">
+        <div id="p" style="border:1px solid black;padding:10px;margin-bottom:10px;height:200px;overflow:auto;line-height:1.5;">
+            입력한 텍스트가 여기에 보여집니다.
+        </div>
+<br>
+[단축키: 하단 입력란에 한글을 쓴 후, 커서가 문자 뒤에있을때 단축키를 누르면 앞쪽 글자가 바뀌어서 위 프리뷰 창에 나타납니다]<br><br>
+&nbsp;&nbsp;1) 커서 앞 글자 위에 발음 입력<br>
+&nbsp;&nbsp;&nbsp;&nbsp; SHIFT+ALT+"r" : ˚<br>
+&nbsp;&nbsp;&nbsp;&nbsp; SHIFT+ALT+"f" : ˇ<br>
+&nbsp;&nbsp;&nbsp;&nbsp; SHIFT+ALT+"t" : ˜<br>
+&nbsp;&nbsp;2) 커서 앞 글자크기 변경<br>
+&nbsp;&nbsp;&nbsp;&nbsp; CTRL+ALT+ ("+"or"↑") : 확대<br>
+&nbsp;&nbsp;&nbsp;&nbsp; CTRL+ALT+ ("-"or"↓") : 축소<br>
+<br>
+        <textarea id="i" placeholder="여기에 텍스트를 입력하세요..." oninput="hI()" onkeyup="uP()" onkeydown="hK(event)" style="border:1px solid black;width:100%;height:200px;resize:none;"></textarea>
+    </div>
+
+    <script>
+        let d = {},
+            f = {},
+            pL = 0;
+
+        function uP() {
+            const v = document.getElementById('i').value,
+                dV = [];
+            for (let i = 0; i < v.length; i++) {
+                let sS = f[i] ? `font-size:${f[i]}em;` : "";
+                dV.push(v[i] === '\n' ? '<br>' : d[i] ? `<span style="position:relative;display:inline-block;${sS}">${v[i]}<span style="position:absolute;top:-0.45em;left:50%;transform:translate(-50%,0);font-size:1.7em;font-weight:bold;">${d[i]}</span></span>` : `<span style="${sS}">${v[i]}</span>`);
+            }
+            document.getElementById('p').innerHTML = dV.join('');
+        }
+
+        function hK(e) {
+            const t = document.getElementById('i'),
+                cP = t.selectionStart - 1,
+                dc = {
+                    'KeyF': '˚',
+                    'KeyR': 'ˇ',
+                    'KeyT': '˜'
+                };
+
+            if (e.altKey) {
+                switch (e.code) {
+                    case 'ArrowUp':
+                    case 'NumpadAdd':
+                        e.preventDefault();
+                        cf(cP, 1.3);
+                        break;
+                    case 'ArrowDown':
+                    case 'NumpadSubtract':
+                        e.preventDefault();
+                        cf(cP, 0.7);
+                        break;
+                    case 'Backquote':
+                        e.preventDefault();
+                        sd(cP, '˙');
+                        break;
+                }
+                if (e.shiftKey && e.code in dc) {
+                    e.preventDefault();
+                    sd(cP, dc[e.code]);
+                }
+            }
+            uP();
+        }
+
+        function sd(p, c) {
+            d[p] = c;
+        }
+
+        function cf(p, fac) {
+            f[p] = (f[p] || 1) * fac;
+        }
+
+        function hI() {
+            const cV = document.getElementById('i').value;
+
+            if (cV.length < pL) {
+                const diff = pL - cV.length;
+                const slicePoint = document.getElementById('i').selectionStart;
+                d = {...d};
+                f = {...f};
+                delete d[slicePoint];
+                delete f[slicePoint];
+            }
+
+            pL = cV.length;
+            uP();
+        }
+
+    </script>
+</body>
+
+</html>
