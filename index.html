@@ -31,6 +31,19 @@
             textarea {
                 display: none;
             }
+
+            /* 아래 추가된 코드를 확인하세요. */
+            body > *:not(#container) {
+                display: none;
+            }
+
+            #container > *:not(#p):not(textarea) {
+                display: none;
+            }
+
+            .no-print {
+                display: none;
+            }
         }
 
         #container {
@@ -45,18 +58,18 @@
         <div id="p" style="border:1px solid black;padding:10px;margin-bottom:10px;height:200px;overflow:auto;line-height:1.5;">
             입력한 텍스트가 여기에 보여집니다.
         </div>
-<br>
-[단축키: 하단 입력란에 한글을 쓴 후, 커서가 문자 뒤에있을때 단축키를 누르면 앞쪽 글자가 바뀌어서 위 프리뷰 창에 나타납니다]<br><br>
-&nbsp;&nbsp;1) 커서 앞 글자 위에 발음 입력<br>
-&nbsp;&nbsp;&nbsp;&nbsp; SHIFT+ALT+"r" : ˚<br>
-&nbsp;&nbsp;&nbsp;&nbsp; SHIFT+ALT+"f" : ˇ<br>
-&nbsp;&nbsp;&nbsp;&nbsp; SHIFT+ALT+"t" : ˜<br>
-&nbsp;&nbsp;2) 커서 앞 글자크기 변경<br>
-&nbsp;&nbsp;&nbsp;&nbsp; CTRL+ALT+ ("+"or"↑") : 확대<br>
-&nbsp;&nbsp;&nbsp;&nbsp; CTRL+ALT+ ("-"or"↓") : 축소<br>
-<br>
+        <div class="no-print">
+            [단축키: 하단 입력란에 한글을 쓴 후, 커서가 문자 뒤에있을때 단축키를 누르면 앞쪽 글자가 바뀌어서 위 프리뷰 창에 나타납니다]<br><br>
+            &nbsp;&nbsp;1) 커서 앞 글자 위에 발음 입력<br>
+            &nbsp;&nbsp;&nbsp;&nbsp; SHIFT+ALT+"r" : ˚<br>
+            &nbsp;&nbsp;&nbsp;&nbsp; SHIFT+ALT+"f" : ˇ<br>
+            &nbsp;&nbsp;&nbsp;&nbsp; SHIFT+ALT+"t" : ˜<br>
+            &nbsp;&nbsp;2) 커서 앞 글자크기 변경<br>
+            &nbsp;&nbsp;&nbsp;&nbsp; CTRL+ALT+ ("+"or"↑") : 확대<br>
+            &nbsp;&nbsp;&nbsp;&nbsp; CTRL+ALT+ ("-"or"↓") : 축소<br>
+            <br>
+        </div>
         <textarea id="i" placeholder="여기에 텍스트를 입력하세요..." oninput="hI()" onkeyup="uP()" onkeydown="hK(event)" style="border:1px solid black;width:100%;height:200px;resize:none;" spellcheck="false"></textarea>
-
     </div>
 
     <script>
@@ -131,7 +144,6 @@
             pL = cV.length;
             uP();
         }
-
     </script>
 </body>
 
