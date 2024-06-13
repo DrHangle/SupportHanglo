@@ -1,0 +1,1160 @@
+
+<html>
+<head>
+<style>
+                html, body {
+                    height: 100%;
+                    margin: 0;
+                }
+                .draggable-box {
+                    transition: top 0.2s, height 0.2s;
+                    text-align: center;
+                    font-size: 11pt;
+                    position: relative;
+                }
+            </style>
+<style>
+        .paper-section {
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: #f9f9f9;
+            border-radius: 5px;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            position: relative;
+        }
+
+        .paper-title {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #333;
+            display: inline-block;
+        }
+
+        .delete-paper-button {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            border: none;
+            background-color: transparent;
+            color: #999;
+            font-size: 20px;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .delete-paper-button:hover {
+            color: #ff4d4d;
+        }
+
+        .fold-button {
+            border: none;
+            background-color: transparent;
+            color: #999;
+            font-size: 16px;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .fold-button:hover {
+            color: #ff4d4d;
+        }
+
+        .info-section {
+            margin-bottom: 15px;
+            padding: 10px;
+            background-color: #fff;
+            border-radius: 3px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .paper-citation {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+
+        .paper-abstract {
+            font-size: 14px;
+            color: #999;
+            font-style: italic;
+        }
+
+        .sentence-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .sentence-row {
+            background-color: #fff;
+            transition: background-color 0.3s;
+        }
+
+        .sentence-row:hover {
+            background-color: #f5f5f5;
+        }
+
+        .checkbox-cell {
+            width: 30px;
+            text-align: center;
+            vertical-align: middle;
+            padding: 5px;
+        }
+
+        .sentence-checkbox {
+            accent-color: #007bff;
+            cursor: pointer;
+        }
+
+        .sentence-text {
+            padding: 10px;
+            font-size: 16px;
+            color: #333;
+        }
+
+        .close-button-cell {
+            width: 30px;
+            text-align: center;
+            vertical-align: middle;
+            padding: 5px;
+        }
+
+        .delete-button {
+            border: none;
+            background-color: transparent;
+            color: #999;
+            font-size: 16px;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .delete-button:hover {
+            color: #ff4d4d;
+        }
+
+        .citation-row {
+            background-color: #f9f9f9;
+            transition: background-color 0.3s;
+        }
+
+        .citation-row:hover {
+            background-color: #f1f1f1;
+        }
+
+            .citation-text {
+            padding: 5px 10px;
+            font-size: 12px;
+            color: #666;
+            text-align: left;
+        }
+        </style></head>
+<body>
+<div style="position: fixed; top: 10px; right: 30%;">
+<label for="auto-save-checkbox">Auto Save</label>
+<input checked="" id="auto-save-checkbox" type="checkbox"/>
+</div>
+<div style="display: flex; height: 100%;"><div id="left-panel" style="width: 40%; overflow-y: scroll; padding: 10px;"></div><div id="center-panel" style="width: 20%; overflow-y: auto; padding: 10px; position: relative;"><div style="text-align: center; font-size: 20px; font-weight: bold; margin-bottom: 10px;">Power Writing
+(글의 맥락/ 순서도)</div><button id="add-button" style="display: block; margin: 0 auto 10px;">+</button><div style="position: absolute; top: 10%; bottom: 0; left: 50%; width: 2px; background-color: black;"></div><div class="box-container" style="position: relative; width: 100%; height: 12%; display: flex; align-items: center; margin-bottom: 5px;"><div class="button-div" style="display: flex; flex-direction: column; margin-right: 10px;"><button class="up-button" data-index="0">↑</button><button class="down-button" data-index="0">↓</button></div><div class="draggable-box" data-index="0" style="width: 80%; height: 100%; background-color: #FFB3BA; border: 1px solid #ccc; cursor: move; display: flex; justify-content: center; align-items: center; padding: 5px; box-sizing: border-box;"></div><button class="delete-button" data-index="0" style="margin-left: 10px;">X</button></div><div class="box-container" style="position: relative; width: 100%; height: 12%; display: flex; align-items: center; margin-bottom: 5px;"><div class="button-div" style="display: flex; flex-direction: column; margin-right: 10px;"><button class="up-button" data-index="1">↑</button><button class="down-button" data-index="1">↓</button></div><div class="draggable-box" data-index="1" style="width: 80%; height: 100%; background-color: #FFDFBA; border: 1px solid #ccc; cursor: move; display: flex; justify-content: center; align-items: center; padding: 5px; box-sizing: border-box;"></div><button class="delete-button" data-index="1" style="margin-left: 10px;">X</button></div><div class="box-container" style="position: relative; width: 100%; height: 12%; display: flex; align-items: center; margin-bottom: 5px;"><div class="button-div" style="display: flex; flex-direction: column; margin-right: 10px;"><button class="up-button" data-index="2">↑</button><button class="down-button" data-index="2">↓</button></div><div class="draggable-box" data-index="2" style="width: 80%; height: 100%; background-color: #FFFFBA; border: 1px solid #ccc; cursor: move; display: flex; justify-content: center; align-items: center; padding: 5px; box-sizing: border-box;"></div><button class="delete-button" data-index="2" style="margin-left: 10px;">X</button></div><div class="box-container" style="position: relative; width: 100%; height: 12%; display: flex; align-items: center; margin-bottom: 5px;"><div class="button-div" style="display: flex; flex-direction: column; margin-right: 10px;"><button class="up-button" data-index="3">↑</button><button class="down-button" data-index="3">↓</button></div><div class="draggable-box" data-index="3" style="width: 80%; height: 100%; background-color: #BAFFC9; border: 1px solid #ccc; cursor: move; display: flex; justify-content: center; align-items: center; padding: 5px; box-sizing: border-box;"></div><button class="delete-button" data-index="3" style="margin-left: 10px;">X</button></div><div class="box-container" style="position: relative; width: 100%; height: 12%; display: flex; align-items: center; margin-bottom: 5px;"><div class="button-div" style="display: flex; flex-direction: column; margin-right: 10px;"><button class="up-button" data-index="4">↑</button><button class="down-button" data-index="4">↓</button></div><div class="draggable-box" data-index="4" style="width: 80%; height: 100%; background-color: #BAE1FF; border: 1px solid #ccc; cursor: move; display: flex; justify-content: center; align-items: center; padding: 5px; box-sizing: border-box;"></div><button class="delete-button" data-index="4" style="margin-left: 10px;">X</button></div><div class="box-container" style="position: relative; width: 100%; height: 12%; display: flex; align-items: center; margin-bottom: 5px;"><div class="button-div" style="display: flex; flex-direction: column; margin-right: 10px;"><button class="up-button" data-index="5">↑</button><button class="down-button" data-index="5">↓</button></div><div class="draggable-box" data-index="5" style="width: 80%; height: 100%; background-color: #D3B4FF; border: 1px solid #ccc; cursor: move; display: flex; justify-content: center; align-items: center; padding: 5px; box-sizing: border-box;"></div><button class="delete-button" data-index="5" style="margin-left: 10px;">X</button></div><div class="box-container" style="position: relative; width: 100%; height: 12%; display: flex; align-items: center; margin-bottom: 5px;"><div class="button-div" style="display: flex; flex-direction: column; margin-right: 10px;"><button class="up-button" data-index="6">↑</button><button class="down-button" data-index="6">↓</button></div><div class="draggable-box" data-index="6" style="width: 80%; height: 100%; background-color: #FFC4B3; border: 1px solid #ccc; cursor: move; display: flex; justify-content: center; align-items: center; padding: 5px; box-sizing: border-box;"></div><button class="delete-button" data-index="6" style="margin-left: 10px;">X</button></div></div><div id="right-panel" style="width: 40%; overflow-y: scroll; padding: 10px; border-left: 1px solid black;"></div></div><button id="fold-button" style="position: fixed; top: 10px; right: 10px;">Fold</button><button id="add-data-button" style="position: fixed; top: 10px; left: 10px;">Add</button><script>
+    // Auto Save 기능
+    const autoSaveCheckbox = document.getElementById('auto-save-checkbox');
+    let isAutoSaveEnabled = autoSaveCheckbox.checked;
+
+    autoSaveCheckbox.addEventListener('change', function() {
+        isAutoSaveEnabled = this.checked;
+    });
+
+    function saveHTMLFile() {
+        if (isAutoSaveEnabled) {
+            const htmlContent = document.documentElement.outerHTML;
+            localStorage.setItem('savedHTML', htmlContent);
+        }
+    }
+
+    // 특정 이벤트 발생 시 자동 저장 트리거
+    document.addEventListener('input', saveHTMLFile);
+    document.addEventListener('dragend', saveHTMLFile);
+
+    let isFolded = false;
+
+    function toggleFold() {
+        const rightPanel = document.getElementById('right-panel');
+        const cards = rightPanel.querySelectorAll('div[draggable="true"]');  // 수정: draggable 속성을 가진 div 요소만 선택
+
+        if (isFolded) {
+            // Unfold
+            cards.forEach(card => {
+                card.querySelector('div > p:last-child').style.display = 'block';  // 수정: 모든 문장의 출처 표시
+                card.style.marginBottom = '10px';
+            });
+            document.getElementById('fold-button').innerText = 'Fold';  // 수정: 버튼 텍스트 변경
+        } else {
+            // Fold
+            cards.forEach(card => {
+                card.querySelector('div > p:last-child').style.display = 'none';  // 수정: 모든 문장의 출처 숨김
+                card.style.marginBottom = '2px';
+            });
+            document.getElementById('fold-button').innerText = 'Ext';  // 수정: 버튼 텍스트 변경
+        }
+
+        isFolded = !isFolded;  // 수정: 상태 변경
+    }
+
+    document.getElementById('fold-button').addEventListener('click', toggleFold);
+
+    const colors = ['#FFB3BA', '#FFDFBA', '#FFFFBA', '#BAFFC9', '#BAE1FF', '#D3B4FF', '#FFC4B3', '#E6F7FF', '#FFE6E6', '#F7FFE6', '#E6FFE6', '#FFE6F7', '#E6E6FF', '#F7E6FF', '#FFE6F0', '#F0FFE6', '#E6F0FF', '#FFE6D4', '#D4FFE6', '#E6D4FF', '#FFD4E6', '#D4E6FF', '#E6FFD4', '#D4FFFF', '#FFFFD4', '#FFD4D4', '#D4D4FF', '#FFD4F0', '#F0D4FF', '#D4F0FF'];
+
+    function getRandomColor(usedColors) {
+        let newColor;
+        do {
+            newColor = colors[Math.floor(Math.random() * colors.length)];
+        } while (usedColors.has(newColor));
+        return newColor;
+    }
+
+
+    // Function to scroll to the top sentence with the same color in the right panel
+    function scrollToTopSentenceWithColor(color) {
+        const rightPanel = document.getElementById('right-panel');
+        const cards = rightPanel.querySelectorAll('div');
+        for (let i = 0; i < cards.length; i++) {
+            if (cards[i].style.backgroundColor === color) {
+                const scrollPosition = cards[i].offsetTop - rightPanel.offsetHeight / 2 + cards[i].offsetHeight / 2;
+                rightPanel.scrollTo({
+                    top: scrollPosition,
+                    behavior: 'smooth'
+                });
+                break;
+            }
+        }
+    }
+
+    function sortRightPanel() {
+        const rightPanel = document.getElementById('right-panel');
+        const cards = Array.from(rightPanel.children);
+        const centerPanel = document.getElementById('center-panel');
+        const centerBoxes = Array.from(centerPanel.querySelectorAll('.draggable-box'));
+        const colorOrder = centerBoxes.map(box => box.style.backgroundColor);
+
+        cards.sort((a, b) => {
+            const colorA = a.style.backgroundColor;
+            const colorB = b.style.backgroundColor;
+            if (colorA === "" && colorB !== "") return 1;
+            if (colorB === "" && colorA !== "") return -1;
+            return colorOrder.indexOf(colorA) - colorOrder.indexOf(colorB);
+        });
+
+        cards.forEach(card => rightPanel.appendChild(card));
+    }
+
+    // Function to scroll to the original sentence in the left panel
+    function scrollToOriginalSentence(sentence) {
+        const leftPanel = document.getElementById('left-panel');
+        const checkboxes = leftPanel.querySelectorAll('.sentence-checkbox');
+        checkboxes.forEach(checkbox => {
+            if (checkbox.getAttribute('data-sentence') === sentence) {
+                checkbox.scrollIntoView({ behavior: 'smooth', block: 'center' });
+            }
+        });
+    }
+
+    document.querySelectorAll('.sentence-checkbox').forEach(checkbox => {
+        checkbox.addEventListener('change', function() {
+            const row = this.closest('tr');
+            const citationRow = row.nextElementSibling;
+            if (this.checked) {
+                this.style.accentColor = 'blue';
+                row.style.backgroundColor = 'yellow';
+                citationRow.style.backgroundColor = 'yellow';
+                row.style.borderStyle = 'dashed';
+                row.style.borderWidth = '2px';
+                row.style.borderColor = 'red';
+                citationRow.style.borderStyle = 'dashed';
+                citationRow.style.borderWidth = '2px';
+                citationRow.style.borderColor = 'red';
+            } else {
+                this.style.accentColor = '';
+                row.style.backgroundColor = '';
+                citationRow.style.backgroundColor = '';
+                row.style.borderStyle = '';
+                row.style.borderWidth = '';
+                row.style.borderColor = '';
+                citationRow.style.borderStyle = '';
+                citationRow.style.borderWidth = '';
+                citationRow.style.borderColor = '';
+            }
+            const rightPanel = document.getElementById('right-panel');
+            const korSentence = this.getAttribute('data-sentence');
+            const citation = this.parentElement.parentElement.nextElementSibling.firstChild.innerText;
+            if (this.checked) {
+                const cards = rightPanel.querySelectorAll('div');
+                let isDuplicate = false;
+                for (let i = 0; i < cards.length; i++) {
+                    const cardKorSentence = cards[i].firstChild.firstChild.innerText;
+                    if (cardKorSentence === korSentence) {
+                        isDuplicate = true;
+                        break;
+                    }
+                }
+
+                if (isDuplicate) {
+                    alert('이미 선택된 문장입니다.');
+                    this.checked = false;
+                    return;
+                }
+
+                const card = document.createElement('div');
+                card.style.border = '1px solid #ccc';
+                card.style.borderRadius = '5px';
+                card.style.padding = '10px';
+                card.style.marginBottom = '10px';
+                card.style.display = 'flex';
+                card.style.justifyContent = 'space-between';
+                card.style.alignItems = 'center';
+                card.setAttribute('draggable', 'true');
+
+                const contentDiv = document.createElement('div');
+                contentDiv.style.flex = '1';
+                const korSentenceElem = document.createElement('p');
+                korSentenceElem.innerText = korSentence;
+                korSentenceElem.style.fontWeight = 'bold';
+                korSentenceElem.style.marginBottom = '5px';
+                contentDiv.appendChild(korSentenceElem);
+
+                const citationElem = document.createElement('p');
+                citationElem.innerText = citation;
+                citationElem.style.fontSize = '0.8em';
+                citationElem.style.marginBottom = '0';
+                contentDiv.appendChild(citationElem);
+
+                card.appendChild(contentDiv);
+
+                // 여기에 Copy 버튼을 추가합니다.
+                const copyButton = document.createElement('button');
+                copyButton.innerText = 'Copy';
+                copyButton.style.marginLeft = '10px';
+                copyButton.addEventListener('click', function() {
+                    const textToCopy = `${korSentence}\n${citation}`;
+                    const tempTextarea = document.createElement('textarea');
+                    tempTextarea.value = textToCopy
+                    document.body.appendChild(tempTextarea);
+                    tempTextarea.select();
+                    document.execCommand('copy');
+                    document.body.removeChild(tempTextarea);
+
+                    const popupDiv = document.createElement('div');
+                    popupDiv.style.position = 'fixed';
+                    popupDiv.style.top = '50%';
+                    popupDiv.style.left = '50%';
+                    popupDiv.style.transform = 'translate(-50%, -50%)';
+                    popupDiv.style.background = 'white';
+                    popupDiv.style.border = '1px solid black';
+                    popupDiv.style.padding = '10px';
+                    popupDiv.style.zIndex = '9999';
+                    popupDiv.innerHTML = `복사된 문장:<br>${textToCopy}`;
+                    document.body.appendChild(popupDiv);
+
+                    setTimeout(function() {
+                        document.body.removeChild(popupDiv);
+                    }, 1000);
+                });
+                card.appendChild(copyButton);
+
+                const buttonDiv = document.createElement('div');
+
+                buttonDiv.style.display = 'flex';
+                buttonDiv.style.flexDirection = 'column';
+                buttonDiv.style.justifyContent = 'center';
+                buttonDiv.style.alignItems = 'center';
+                buttonDiv.style.marginLeft = '10px';
+
+                const upButton = document.createElement('button');
+                upButton.innerText = '▲';
+                upButton.addEventListener('click', function() {
+                    const prevCard = card.previousElementSibling;
+                    if (prevCard) {
+                        rightPanel.insertBefore(card, prevCard);
+
+                        sortRightPanel();
+                    }
+                });
+                buttonDiv.appendChild(upButton);
+
+                const downButton = document.createElement('button');
+                downButton.innerText = '▼';
+                downButton.addEventListener('click', function() {
+                    const nextCard = card.nextElementSibling;
+                    if (nextCard) {
+                        rightPanel.insertBefore(nextCard, card);
+
+                        sortRightPanel();
+                    }
+                });
+                buttonDiv.appendChild(downButton);
+
+                const delButton = document.createElement('button');
+                delButton.innerText = 'Delete';
+                delButton.addEventListener('click', function() {
+                    rightPanel.removeChild(card);
+                    checkbox.checked = false;
+
+                    sortRightPanel();
+                });
+                buttonDiv.appendChild(delButton);
+
+                card.appendChild(buttonDiv);
+
+                rightPanel.appendChild(card);
+                requestAnimationFrame(() => {
+                    rightPanel.scrollTop = rightPanel.scrollHeight;
+                });
+            } else {
+                const cards = rightPanel.querySelectorAll('div');
+                for (let i = 0; i < cards.length; i++) {
+                    const cardKorSentence = cards[i].firstChild.firstChild.innerText;
+                    if (cardKorSentence === korSentence) {
+                        rightPanel.removeChild(cards[i]);
+                        break;
+                    }
+                }
+            }
+
+
+        });
+    });
+
+    document.querySelectorAll('.delete-button').forEach(button => {
+        button.addEventListener('click', function() {
+            const sentence = this.getAttribute('data-sentence');
+            const citation = this.getAttribute('data-citation');
+            const checkboxes = document.querySelectorAll('.sentence-checkbox');
+            checkboxes.forEach(checkbox => {
+                if (checkbox.getAttribute('data-sentence') === sentence) {
+                    checkbox.checked = false;
+                }
+            });
+            const rightPanel = document.getElementById('right-panel');
+            const cards = rightPanel.querySelectorAll('div');
+            cards.forEach(card => {
+                const cardKorSentence = card.firstChild.firstChild.innerText;
+                const cardCitation = card.firstChild.lastChild.innerText;
+                if (cardKorSentence === sentence && cardCitation === citation) {
+                    rightPanel.removeChild(card);
+                }
+            });
+            const row = this.closest('tr');
+            row.nextElementSibling.remove();
+            row.remove();
+
+        });
+    });
+
+    const rightPanel = document.getElementById('right-panel');
+    let draggedCard = null;
+
+    rightPanel.addEventListener('dragstart', function(e) {
+        if (e.target.tagName === 'DIV') {
+            draggedCard = e.target;
+            e.target.style.opacity = '0.5';
+
+        }
+    });
+
+    rightPanel.addEventListener('dragend', function(e) {
+        if (e.target.tagName === 'DIV') {
+            e.target.style.opacity = '1';
+            draggedCard = null;
+
+        }
+    });
+
+    rightPanel.addEventListener('dragover', function(e) {
+        e.preventDefault();
+        if (draggedCard) {
+            const targetCard = e.target.closest('div');
+            if (targetCard && targetCard !== draggedCard) {
+                const rect = targetCard.getBoundingClientRect();
+                const y = e.clientY - rect.top;
+                if (y < 5) {
+                    targetCard.style.borderTop = '2px solid blue';
+                    targetCard.style.borderBottom = 'none';
+                } else if (y > rect.height - 5) {
+                    targetCard.style.borderTop = 'none';
+                    targetCard.style.borderBottom = '2px solid blue';
+                } else {
+                    targetCard.style.borderTop = 'none';
+                    targetCard.style.borderBottom = 'none';
+                }
+            }
+        }
+    });
+
+    rightPanel.addEventListener('dragleave', function(e) {
+        const targetCard = e.target.closest('div');
+        if (targetCard) {
+            targetCard.style.borderTop = 'none';
+            targetCard.style.borderBottom = 'none';
+        }
+    });
+
+    rightPanel.addEventListener('drop', function(e) {
+        e.preventDefault();
+        if (draggedCard && e.target !== draggedCard) {
+            const targetCard = e.target.closest('div');
+            if (targetCard) {
+                const container = targetCard.parentNode;
+                const isDraggingUp = e.clientY < targetCard.getBoundingClientRect().top + targetCard.offsetHeight / 2;
+
+                if (isDraggingUp) {
+                    container.insertBefore(draggedCard, targetCard);
+                } else {
+                    container.insertBefore(draggedCard, targetCard.nextSibling);
+                }
+                targetCard.style.borderTop = 'none';
+                targetCard.style.borderBottom = 'none';
+
+            }
+        }
+    });
+
+    // Add single-click event to the right panel boxes
+    rightPanel.addEventListener('click', function(e) {
+        if (e.target.closest('div')) {
+            const sentence = e.target.closest('div').querySelector('p').innerText;
+            scrollToOriginalSentence(sentence);
+        }
+    });
+
+    // Function to delete the entire paper section
+    function deletePaperSection(button) {
+        const paperSection = button.closest('.paper-section');
+        paperSection.remove();
+    }
+
+    // Add event listeners to delete paper buttons
+    document.querySelectorAll('.delete-paper-button').forEach(button => {
+        button.addEventListener('click', function() {
+            deletePaperSection(this);
+        });
+    });
+
+    // Function to swap boxes
+    function swapBoxes(index1, index2) {
+        const boxes = Array.from(document.querySelectorAll('.box-container'));
+
+        // Swap positions in DOM
+        const parent = boxes[0].parentNode;
+        if (index1 < index2) {
+            parent.insertBefore(boxes[index2], boxes[index1]);
+            parent.insertBefore(boxes[index1], boxes[index2].nextSibling);
+        } else {
+            parent.insertBefore(boxes[index1], boxes[index2]);
+            parent.insertBefore(boxes[index2], boxes[index1].nextSibling);
+        }
+
+        // Update data-index attributes
+        updateDataIndices();
+
+        // Sort right panel after swapping boxes
+        sortRightPanel();
+    }
+
+    function updateDataIndices() {
+        const boxes = Array.from(document.querySelectorAll('.box-container'));
+        boxes.forEach((box, i) => {
+            box.querySelector('.draggable-box').setAttribute('data-index', i);
+            box.querySelector('.up-button').setAttribute('data-index', i);
+            box.querySelector('.down-button').setAttribute('data-index', i);
+            box.querySelector('.delete-button').setAttribute('data-index', i);
+        });
+    }
+
+    // Add event listeners to buttons
+    document.querySelectorAll('.up-button').forEach(button => {
+        button.addEventListener('click', function() {
+            const index = parseInt(this.getAttribute('data-index'));
+            if (index > 0) {
+                swapBoxes(index, index - 1);
+
+            }
+        });
+    });
+
+    document.querySelectorAll('.down-button').forEach(button => {
+        button.addEventListener('click', function() {
+            const index = parseInt(this.getAttribute('data-index'));
+            if (index < document.querySelectorAll('.box-container').length - 1) {
+                swapBoxes(index, index + 1);
+
+            }
+        });
+    });
+
+    // Add double-click event to make boxes editable
+    document.querySelectorAll('.draggable-box').forEach(box => {
+        box.addEventListener('dblclick', function() {
+            const currentText = this.innerText;
+            const input = document.createElement('textarea');
+            input.value = currentText;
+            input.style.width = '90%';
+            input.style.height = '50px';
+            input.style.textAlign = 'center';
+
+            // 엔터 키 입력 시 줄바꿈 처리
+            input.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    this.value += '\n';
+                }
+            });
+
+            // 입력 상자 바깥 클릭 시 텍스트 적용 및 입력 상자 해제
+            const applyText = () => {
+                box.innerHTML = input.value.replace(/\n/g, '<br>');
+
+                document.removeEventListener('click', handleOutsideClick);
+            };
+
+            const handleOutsideClick = (e) => {
+                if (!input.contains(e.target)) {
+                    applyText();
+                }
+            };
+
+            document.addEventListener('click', handleOutsideClick);
+
+            box.innerHTML = '';
+            box.appendChild(input);
+            input.focus();
+        });
+    });
+    // Add event listeners to delete buttons
+    document.querySelectorAll('.delete-button').forEach(button => {
+        button.addEventListener('click', function() {
+            const index = parseInt(this.getAttribute('data-index'));
+            const boxContainer = document.querySelectorAll('.box-container')[index];
+            boxContainer.remove();
+            updateBoxHeights();
+            updateDataIndices();
+
+        });
+    });
+
+    // Add event listener to the Add button
+    document.getElementById('add-data-button').addEventListener('click', function() {
+        const fileInput = document.createElement('input');
+        fileInput.type = 'file';
+        fileInput.accept = '.json';
+        fileInput.multiple = true;  // 파일 다중 선택 가능하도록 설정
+        fileInput.addEventListener('change', function(e) {
+            const files = Array.from(e.target.files);  // 선택한 파일들을 배열로 변환
+            files.forEach(file => {
+                const reader = new FileReader();
+                reader.onload = function() {
+                    const newData = JSON.parse(reader.result);
+                    addDataToHTML(newData);
+                };
+                reader.readAsText(file);
+            });
+        });
+        fileInput.click();
+    });
+    function addDataToHTML(newData) {
+        const leftPanel = document.getElementById('left-panel');
+        const hr = document.createElement('hr');
+        leftPanel.appendChild(hr);
+
+        const paperSection = document.createElement('div');
+        paperSection.className = 'paper-section';
+
+        const titleTag = document.createElement('h2');
+        titleTag.className = 'paper-title';
+        titleTag.innerText = newData.title || "";
+        paperSection.appendChild(titleTag);
+
+        const deletePaperButton = document.createElement('button');
+        deletePaperButton.className = 'delete-paper-button';
+        deletePaperButton.innerText = '×';
+        deletePaperButton.addEventListener('click', function() {
+            deletePaperSection(this);
+        });
+        titleTag.appendChild(deletePaperButton);
+
+        // 논문 제목 옆에 펼치기/접기 버튼 추가
+        const foldButton = document.createElement('button');
+        foldButton.className = 'fold-button';
+        foldButton.innerText = 'Fold';
+        foldButton.style.marginLeft = '10px'; // 제목과의 간격 조절
+        titleTag.appendChild(foldButton);
+
+        const infoSection = document.createElement('div');
+        infoSection.className = 'info-section';
+
+        const citationTag = document.createElement('p');
+        citationTag.className = 'paper-citation';
+        citationTag.innerText = newData.citation || "";
+        infoSection.appendChild(citationTag);
+
+        const abstractTag = document.createElement('p');
+        abstractTag.className = 'paper-abstract';
+        abstractTag.innerText = newData["abstract summary"] || "";
+        infoSection.appendChild(abstractTag);
+
+        paperSection.appendChild(infoSection);
+
+        const table = document.createElement('table');
+        table.className = 'sentence-table';
+        paperSection.appendChild(table);
+
+        newData.sentences.forEach(sentence => {
+            const sentenceCitation = sentence.citation || "";
+            if (!sentenceCitation) {
+                return;  // Skip sentences with empty citation
+            }
+
+            const row = document.createElement('tr');
+            row.className = 'sentence-row';
+            table.appendChild(row);
+
+            // Checkbox cell
+            const checkboxCell = document.createElement('td');
+            checkboxCell.className = 'checkbox-cell';
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.className = 'sentence-checkbox';
+            checkbox.setAttribute('data-sentence', sentence.kor || "");
+            checkbox.addEventListener('change', function() {
+                const row = this.closest('tr');
+                const citationRow = row.nextElementSibling;
+                if (this.checked) {
+                    this.style.accentColor = 'blue';
+                    row.style.backgroundColor = 'yellow'; // 윗줄 배경색 변경
+                    citationRow.style.backgroundColor = 'yellow'; // 아랫줄 배경색 변경
+                    row.style.borderStyle = 'dashed';
+                    row.style.borderWidth = '2px';
+                    row.style.borderColor = 'red';
+                    citationRow.style.borderStyle = 'dashed';
+                    citationRow.style.borderWidth = '2px';
+                    citationRow.style.borderColor = 'red';
+                } else {
+                    this.style.accentColor = '';
+                    row.style.backgroundColor = ''; // 윗줄 배경색 초기화
+                    citationRow.style.backgroundColor = ''; // 아랫줄 배경색
+                    row.style.borderStyle = '';
+                    row.style.borderWidth = '';
+                    row.style.borderColor = '';
+                    citationRow.style.borderStyle = '';
+                    citationRow.style.borderWidth = '';
+                    citationRow.style.borderColor = '';
+                }
+                const rightPanel = document.getElementById('right-panel');
+                const korSentence = this.getAttribute('data-sentence');
+                const citation = this.parentElement.parentElement.nextElementSibling.firstChild.innerText;
+                if (this.checked) {
+                    const cards = rightPanel.querySelectorAll('div');
+                    let isDuplicate = false;
+                    cards.forEach(card => {
+                        const cardKorSentence = card.firstChild.firstChild.innerText;
+                        if (cardKorSentence === korSentence) {
+                            isDuplicate = true;
+                        }
+                    });
+
+                    if (isDuplicate) {
+                        alert('이미 선택된 문장입니다.');
+                        this.checked = false;
+                        return;
+                    }
+
+                    const card = document.createElement('div');
+                    card.style.border = '1px solid #ccc';
+                    card.style.borderRadius = '5px';
+                    card.style.padding = '10px';
+                    card.style.marginBottom = '10px';
+                    card.style.display = 'flex';
+                    card.style.justifyContent = 'space-between';
+                    card.style.alignItems = 'center';
+                    card.setAttribute('draggable', 'true');
+
+                    const contentDiv = document.createElement('div');
+                    contentDiv.style.flex = '1';
+                    const korSentenceElem = document.createElement('p');
+                    korSentenceElem.innerText = korSentence;
+                    korSentenceElem.style.fontWeight = 'bold';
+                    korSentenceElem.style.marginBottom = '5px';
+                    contentDiv.appendChild(korSentenceElem);
+
+                    const citationElem = document.createElement('p');
+                    citationElem.innerText = citation;
+                    citationElem.style.fontSize = '0.8em';
+                    citationElem.style.marginBottom = '0';
+                    contentDiv.appendChild(citationElem);
+
+                    card.appendChild(contentDiv);
+
+                    const buttonDiv = document.createElement('div');
+                    buttonDiv.style.display = 'flex';
+                    buttonDiv.style.flexDirection = 'column';
+                    buttonDiv.style.justifyContent = 'center';
+                    buttonDiv.style.alignItems = 'center';
+                    buttonDiv.style.marginLeft = '10px';
+
+                    const upButton = document.createElement('button');
+                    upButton.innerText = '▲';
+                    upButton.addEventListener('click', function() {
+                        const prevCard = card.previousElementSibling;
+                        if (prevCard) {
+                            rightPanel.insertBefore(card, prevCard);
+
+                            sortRightPanel();
+                        }
+                    });
+                    buttonDiv.appendChild(upButton);
+
+                    const downButton = document.createElement('button');
+                    downButton.innerText = '▼';
+                    downButton.addEventListener('click', function() {
+                        const nextCard = card.nextElementSibling;
+                        if (nextCard) {
+                            rightPanel.insertBefore(nextCard, card);
+
+                            sortRightPanel();
+                        }
+                    });
+                    buttonDiv.appendChild(downButton);
+
+                    const delButton = document.createElement('button');
+                    delButton.innerText = 'Delete';
+                    delButton.addEventListener('click', function() {
+                        rightPanel.removeChild(card);
+                        checkbox.checked = false;
+
+                        sortRightPanel();
+                    });
+                    buttonDiv.appendChild(delButton);
+
+                    card.appendChild(buttonDiv);
+
+                    rightPanel.appendChild(card);
+                } else {
+                    const cards = rightPanel.querySelectorAll('div');
+                    cards.forEach(card => {
+                        const cardKorSentence = card.firstChild.firstChild.innerText;
+                        if (cardKorSentence === korSentence) {
+                            rightPanel.removeChild(card);
+                        }
+                    });
+                }
+
+
+            });
+            checkboxCell.appendChild(checkbox);
+            row.appendChild(checkboxCell);
+
+            // Korean sentence cell
+            const korSentenceCell = document.createElement('td');
+            korSentenceCell.className = 'sentence-text';
+            korSentenceCell.innerText = sentence.kor || "";
+            row.appendChild(korSentenceCell);
+
+            // Close button cell
+            const closeButtonCell = document.createElement('td');
+            closeButtonCell.className = 'close-button-cell';
+            const closeButton = document.createElement('button');
+            closeButton.className = 'delete-button';
+            closeButton.setAttribute('data-sentence', sentence.kor || "");
+            closeButton.setAttribute('data-citation', sentenceCitation);
+            closeButton.innerText = '×';
+            closeButton.addEventListener('click', function() {
+                const sentence = this.getAttribute('data-sentence');
+                const citation = this.getAttribute('data-citation');
+                const checkboxes = document.querySelectorAll('.sentence-checkbox');
+                checkboxes.forEach(checkbox => {
+                    if (checkbox.getAttribute('data-sentence') === sentence) {
+                        checkbox.checked = false;
+                    }
+                });
+                const rightPanel = document.getElementById('right-panel');
+                const cards = rightPanel.querySelectorAll('div');
+                cards.forEach(card => {
+                    const cardKorSentence = card.firstChild.firstChild.innerText;
+                    const cardCitation = card.firstChild.lastChild.innerText;
+                    if (cardKorSentence === sentence && cardCitation === citation) {
+                        rightPanel.removeChild(card);
+                    }
+                });
+                const row = this.closest('tr');
+                row.nextElementSibling.remove();
+                row.remove();
+            });
+            closeButtonCell.appendChild(closeButton);
+            row.appendChild(closeButtonCell);
+
+            // Citation row
+            const citationRow = document.createElement('tr');
+            citationRow.className = 'citation-row';
+            const citationCell = document.createElement('td');
+            citationCell.className = 'citation-text';
+            citationCell.setAttribute('colspan', '3');
+            citationCell.innerText = sentenceCitation;
+            citationRow.appendChild(citationCell);
+            table.appendChild(citationRow);
+        });
+
+        leftPanel.appendChild(paperSection);
+
+        // 펼치기/접기 버튼 클릭 이벤트 리스너 추가
+        foldButton.addEventListener('click', function() {
+            const paperSection = this.closest('.paper-section');
+            const sentences = paperSection.querySelectorAll('.sentence-row');
+            const citationRows = paperSection.querySelectorAll('.citation-row');
+
+            if (this.innerText === 'Fold') {
+                // 접기
+                sentences.forEach(sentence => {
+                    sentence.style.display = 'none';
+                });
+                citationRows.forEach(citationRow => {
+                    citationRow.style.display = 'none';
+                });
+                this.innerText = 'Ext';
+            } else {
+                // 펼치기
+                sentences.forEach(sentence => {
+                    sentence.style.display = 'table-row';
+                });
+                citationRows.forEach(citationRow => {
+                    citationRow.style.display = 'table-row';
+                });
+                this.innerText = 'Fold';
+            }
+        });
+    }
+
+    // Add drag and drop functionality from right panel to center panel
+    function addDragAndDropEventsToBox(box) {
+        box.addEventListener('dragover', function(e) {
+            e.preventDefault();
+        });
+
+        box.addEventListener('drop', function(e) {
+            e.preventDefault();
+            if (draggedCard) {
+                draggedCard.style.backgroundColor = this.style.backgroundColor;
+                this.style.opacity = '1';
+                sortRightPanel();
+            }
+        });
+    }
+
+    document.querySelectorAll('.draggable-box').forEach(addDragAndDropEventsToBox);
+
+    // Load the initial state from localStorage
+    loadState();
+
+    // Add new box functionality
+    document.getElementById('add-button').addEventListener('click', function() {
+        const centerPanel = document.getElementById('center-panel');
+        const boxes = centerPanel.querySelectorAll('.box-container');
+        const newIndex = boxes.length;
+
+        const usedColors = new Set();
+        document.querySelectorAll('.draggable-box').forEach(box => {
+            usedColors.add(box.style.backgroundColor);
+        });
+
+        const newColor = getRandomColor(usedColors);
+
+        const newBoxContainer = document.createElement('div');
+        newBoxContainer.className = 'box-container';
+        newBoxContainer.style.position = 'relative';
+        newBoxContainer.style.width = '100%';
+        newBoxContainer.style.height = '60px';
+        newBoxContainer.style.display = 'flex';
+        newBoxContainer.style.alignItems = 'center';
+        newBoxContainer.style.marginBottom = '5px';
+
+        const draggableBox = document.createElement('div');
+        draggableBox.className = 'draggable-box';
+        draggableBox.style.width = '80%';
+        draggableBox.style.height = '100%';
+        draggableBox.style.backgroundColor = newColor;
+        draggableBox.style.border = '1px solid #ccc';
+        draggableBox.style.cursor = 'move';
+        draggableBox.style.display = 'flex';
+        draggableBox.style.justifyContent = 'center';
+        draggableBox.style.alignItems = 'center';
+        draggableBox.style.padding = '5px';
+        draggableBox.style.boxSizing = 'border-box';
+        draggableBox.setAttribute('data-index', newIndex);
+
+        draggableBox.addEventListener('dblclick', function() {
+            const currentText = this.innerText;
+            const input = document.createElement('textarea');
+            input.value = currentText;
+            input.style.width = '90%';
+            input.style.height = '50px';
+            input.style.textAlign = 'center';
+
+            // 엔터 키 입력 시 줄바꿈 처리
+            input.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter' && !e.shiftKey) {
+                    e.preventDefault();
+                    this.value += '\n';
+                }
+            });
+
+            // 입력 상자 바깥 클릭 시 텍스트 적용 및 입력 상자 해제
+            const applyText = () => {
+                draggableBox.innerHTML = input.value.replace(/\n/g, '<br>');
+                document.removeEventListener('click', handleOutsideClick);
+            };
+
+            const handleOutsideClick = (e) => {
+                if (!input.contains(e.target)) {
+                    applyText();
+                }
+            };
+
+            document.addEventListener('click', handleOutsideClick);
+
+            draggableBox.innerHTML = '';
+            draggableBox.appendChild(input);
+            input.focus();
+        });
+
+        const buttonDiv = document.createElement('div');
+        buttonDiv.className = 'button-div';
+        buttonDiv.style.display = 'flex';
+        buttonDiv.style.flexDirection = 'column';
+        buttonDiv.style.marginRight = '10px';
+
+        const upButton = document.createElement('button');
+        upButton.className = 'up-button';
+        upButton.setAttribute('data-index', newIndex);
+        upButton.innerText = '↑';
+        upButton.addEventListener('click', function() {
+            const index = parseInt(this.getAttribute('data-index'));
+            if (index > 0) {
+                swapBoxes(index, index - 1);
+            }
+        });
+        buttonDiv.appendChild(upButton);
+
+        const downButton = document.createElement('button');
+        downButton.className = 'down-button';
+        downButton.setAttribute('data-index', newIndex);
+        downButton.innerText = '↓';
+        downButton.addEventListener('click', function() {
+            const index = parseInt(this.getAttribute('data-index'));
+            if (index < document.querySelectorAll('.box-container').length - 1) {
+                swapBoxes(index, index + 1);
+            }
+        });
+        buttonDiv.appendChild(downButton);
+
+        const deleteButton = document.createElement('button');
+        deleteButton.className = 'delete-button';
+        deleteButton.setAttribute('data-index', newIndex);
+        deleteButton.innerText = 'X';
+        deleteButton.style.marginLeft = '10px';
+
+        deleteButton.addEventListener('click', function() {
+            const index = parseInt(this.getAttribute('data-index'));
+            const boxContainer = document.querySelectorAll('.box-container')[index];
+            boxContainer.remove();
+            updateBoxHeights();
+            updateDataIndices();
+        });
+
+        newBoxContainer.appendChild(buttonDiv);
+        newBoxContainer.appendChild(draggableBox);
+        newBoxContainer.appendChild(deleteButton);
+        centerPanel.appendChild(newBoxContainer);
+
+        addDragAndDropEventsToBox(draggableBox);
+
+        updateBoxHeights();
+        updateDataIndices();
+
+    });
+
+    function updateBoxHeights() {
+        const boxes = document.querySelectorAll('.box-container');
+        const boxCount = boxes.length;
+        const boxHeight = Math.max(10, (100 - 10) / boxCount - 1); // Calculate height based on box count
+
+        boxes.forEach((box, index) => {
+            box.style.height = `${90 / boxCount}%`;
+        });
+    }
+
+    function loadState() {
+        const savedUndoStack = JSON.parse(localStorage.getItem('undoStack') || '[]');
+        if (savedUndoStack.length > 0) {
+            const state = savedUndoStack.pop();
+            document.getElementById('right-panel').innerHTML = state.rightPanelContent;
+            const checkboxes = document.querySelectorAll('.sentence-checkbox');
+            checkboxes.forEach(checkbox => {
+                const sentence = checkbox.getAttribute('data-sentence');
+                checkbox.checked = state.checkedSentences.includes(sentence);
+            });
+            undoStack.length = 0; // Clear the undo stack
+            undoStack.push(...savedUndoStack);
+            localStorage.setItem('undoStack', JSON.stringify(undoStack));
+        }
+    }
+
+    // 여기에 가운데 패널 색깔 박스 클릭 이벤트 리스너를 추가해줘
+    document.querySelectorAll('.draggable-box').forEach(box => {
+        box.addEventListener('click', function() {
+            const color = this.style.backgroundColor;
+            scrollToTopSentenceWithColor(color);
+        });
+    });
+
+    // Add Ctrl+S event listener for saving
+    document.addEventListener('keydown', function(e) {
+        if (e.ctrlKey && e.key === 's') {
+            e.preventDefault();
+            const htmlContent = document.documentElement.outerHTML;
+            const blob = new Blob([htmlContent], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'PowerWriter.html';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+    });
+    
+
+    // 페이지 로드 시 저장된 내용 복원
+    window.addEventListener('load', function() {
+        const savedHTML = localStorage.getItem('savedHTML');
+        if (savedHTML) {
+            document.documentElement.innerHTML = savedHTML;
+        }
+    });
+
+    window.addEventListener('beforeunload', function(e) {
+        if (!isAutoSaveEnabled) {
+            e.preventDefault();
+            e.returnValue = '';
+        }
+    });
+
+    window.addEventListener('unload', function(e) {
+        if (!isAutoSaveEnabled) {
+            const confirmResult = confirm('저장되지 않은 정보는 모두 소실됩니다. 그래도 나가시겠습니까?\n\n- 네, 나가기\n- 아니오\n- 저장한 후 종료하기');
+            if (confirmResult) {
+                // 나가기 선택 시 추가 동작 없음
+            } else {
+                e.preventDefault();
+                saveHTMLFile();
+            }
+        }
+    });
+    </script></body>
+</html>
